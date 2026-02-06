@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bangla Bhasha - Learn to Speak Bangla</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    /* Header */
+    .header { 
+      text-align: center; 
+      color: white; 
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .header h1 {
+      font-size: 3.2em;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+    .header .bangla-title {
+      font-family: "Siyam Rupali", "Arial", sans-serif;
+      font-size: 2.5em;
+      color: #ffeb3b;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    .header p { 
+      font-size: 1.3em; 
+      color: #fff;
+      margin-bottom: 10px;
+      opacity: 0.9;
+    }
+
+    /* Progress controls - ALWAYS VISIBLE */
+    .progress-controls {
+      text-align: center;
+      margin-bottom: 25px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      border: 4px solid #4caf50;
+    }
+    .progress-controls .btn {
+      margin: 8px 12px;
+      font-size: 1.1em;
+      padding: 14px 28px;
+      border: 2px solid transparent;
+      font-weight: bold;
+    }
+
+    /* Main Menu */
+    .main-menu {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+    .menu-card {
+      background: white;
+      border-radius: 25px;
+      padding: 35px 30px;
+      text-align: center;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      transition: all 0.4s;
+      cursor: pointer;
+      border: 5px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    .menu-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+    }
+    .menu-card:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: linear-gradient(90deg, #ff5722, #4caf50, #2196f3);
+    }
+    .menu-card.speaking { border-color: #4caf50; }
+    .menu-card.vocabulary { border-color: #2196f3; }
+    .menu-card.listening { border-color: #ff9800; }
+    .menu-card.conversation { border-color: #9c27b0; }
+    
+    .menu-card-icon {
+      font-size: 4.5em;
+      margin-bottom: 20px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .menu-card h2 {
+      font-size: 2em;
+      margin-bottom: 15px;
+      color: #333;
+      font-weight: bold;
+    }
+    .menu-card p {
+      font-size: 1.2em;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .menu-card .level-info {
+      display: inline-block;
+      background: #e8f5e9;
+      color: #2e7d32;
+      padding: 8px 20px;
+      border-radius: 25px;
+      font-size: 1em;
+      font-weight: bold;
+      border: 2px solid #4caf50;
+    }
+
+    /* Game Area */
+    .game-area {
+      background: white;
+      padding: 40px;
+      border-radius: 25px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      display: none;
+      margin-bottom: 30px;
+      border: 5px solid #4caf50;
+      position: relative;
+    }
+    .game-area.active { display: block; }
+    .game-area:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 10px;
+      background: linear-gradient(90deg, #ff5722, #4caf50, #2196f3);
+      border-radius: 25px 25px 0 0;
+    }
+
+    /* Score Board */
+    .score-board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .score-item {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      border: 3px solid #e0e0e0;
+      transition: all 0.3s;
+    }
+    .score-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .score-label {
+      font-size: 1em;
+      color: #666;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .score-value {
+      font-size: 2.2em;
+      font-weight: bold;
+      color: #2196f3;
+    }
+
+    /* Progress Bar */
+    .progress-bar {
+      background: #e0e0e0;
+      height: 40px;
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 30px 0;
+      box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+      border: 3px solid #ddd;
+    }
+    .progress-fill {
+      background: linear-gradient(90deg, #4caf50 0%, #8bc34a 100%);
+      height: 100%;
+      transition: width 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2em;
+      width: 0%;
+    }
+
+    /* Bangla Display */
+    .bangla-display {
+      text-align: center;
+      margin: 40px 0;
+      padding: 40px;
+      background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+      border-radius: 20px;
+      border: 4px solid #2196f3;
+      box-shadow: 0 8px 16px rgba(33, 150, 243, 0.2);
+    }
+    .bangla-text {
+      font-family: "Siyam Rupali", "Arial", sans-serif;
+      font-size: 3.5em;
+      color: #d32f2f;
+      margin-bottom: 20px;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    .english-text {
+      font-size: 2.2em;
+      color: #1976d2;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+    .pronunciation {
+      font-size: 1.8em;
+      color: #388e3c;
+      font-style: italic;
+      margin-top: 15px;
+      background: #e8f5e9;
+      padding: 10px 20px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    /* Voice Recording Section */
+    .voice-section {
+      background: #f9f9f9;
+      padding: 35px;
+      border-radius: 20px;
+      margin: 30px 0;
+      border: 4px solid #ff9800;
+      text-align: center;
+    }
+    .voice-title {
+      font-size: 1.8em;
+      color: #ff9800;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+    .recording-controls {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 25px 0;
+      flex-wrap: wrap;
+    }
+    .record-btn {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: none;
+      font-size: 1.8em;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .record-btn.start {
+      background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+      color: white;
+    }
+    .record-btn.stop {
+      background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+      color: white;
+    }
+    .record-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+    .record-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .recording-status {
+      font-size: 1.3em;
+      margin: 15px 0;
+      padding: 12px 25px;
+      border-radius: 10px;
+      display: inline-block;
+      font-weight: bold;
+    }
+    .recording-status.recording {
+      background: #ffebee;
+      color: #d32f2f;
+      animation: pulse 1.5s infinite;
+    }
+    .recording-status.recorded {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+    .playback {
+      margin-top: 20px;
+    }
+    .playback audio {
+      width: 100%;
+      max-width: 400px;
+      margin-top: 15px;
+    }
+
+    /* Options Container */
+    .options-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 25px;
+      margin: 40px 0;
+    }
+    @media (max-width: 768px) {
+      .options-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    .option-btn {
+      background: white;
+      border: 4px solid #2196f3;
+      padding: 30px 25px;
+      border-radius: 20px;
+      font-size: 1.4em;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-weight: 600;
+    }
+    .option-btn:hover {
+      background: #e3f2fd;
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(33, 150, 243, 0.2);
+    }
+    .option-btn.correct {
+      background: #c8e6c9;
+      border-color: #4caf50;
+      color: #2e7d32;
+    }
+    .option-btn.incorrect {
+      background: #ffcdd2;
+      border-color: #f44336;
+      color: #c62828;
+    }
+    .option-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .option-letter {
+      background: #2196f3;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.4em;
+      flex-shrink: 0;
+    }
+
+    /* Conversation Practice */
+    .conversation-scene {
+      background: linear-gradient(135deg, #e8f5e9 0%, #f3e5f5 100%);
+      padding: 35px;
+      border-radius: 20px;
+      margin: 30px 0;
+      border: 4px solid #9c27b0;
+    }
+    .character {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 25px;
+      padding: 20px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .character-avatar {
+      font-size: 3.5em;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #e3f2fd;
+      color: #2196f3;
+      flex-shrink: 0;
+    }
+    .character-speech {
+      font-size: 1.5em;
+      color: #333;
+      line-height: 1.6;
+    }
+    .character-speech.bangla {
+      font-family: "Siyam Rupali", "Arial", sans-serif;
+      color: #d32f2f;
+      font-weight: bold;
+      font-size: 1.6em;
+    }
+    .character-response {
+      background: #fff3e0;
+      border: 3px solid #ff9800;
+      padding: 25px;
+      border-radius: 15px;
+      margin-top: 25px;
+    }
+
+    /* Feedback Area */
+    .feedback-area {
+      text-align: center;
+      margin: 30px 0;
+      padding: 30px;
+      border-radius: 20px;
+      font-size: 1.6em;
+      font-weight: bold;
+      display: none;
+      animation: slideIn 0.5s ease-out;
+      border: 4px solid transparent;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .feedback-area.show { display: block; }
+    .feedback-area.correct { 
+      background: #c8e6c9; 
+      color: #2e7d32;
+      border-color: #4caf50;
+    }
+    .feedback-area.incorrect { 
+      background: #ffcdd2; 
+      color: #c62828;
+      border-color: #f44336;
+    }
+    .feedback-area .emoji {
+      font-size: 2em;
+      margin-right: 15px;
+    }
+
+    /* Hint & Explanation */
+    .hint-box {
+      background: #e3f2fd;
+      padding: 25px;
+      border-radius: 15px;
+      margin: 25px 0;
+      display: none;
+      font-size: 1.3em;
+      color: #1565c0;
+      border-left: 6px solid #2196f3;
+      animation: slideIn 0.5s ease-out;
+    }
+    .hint-box.show { display: block; }
+    .explanation-box {
+      background: #fff3e0;
+      border: 4px solid #ff9800;
+      padding: 25px;
+      margin: 20px 0;
+      border-radius: 15px;
+      display: none;
+      text-align: left;
+      animation: slideIn 0.5s ease-out;
+    }
+    .explanation-box.show { display: block; }
+    .explanation-box h3 {
+      color: #ef6c00;
+      margin-bottom: 15px;
+      font-size: 1.6em;
+    }
+    .explanation-box p {
+      color: #5d4037;
+      font-size: 1.3em;
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 18px 35px;
+      font-size: 1.3em;
+      font-weight: bold;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 200px;
+      justify-content: center;
+    }
+    .btn:hover:not(.disabled) { 
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    .btn.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn-next { 
+      background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+      color: #fff;
+      border: 3px solid #388e3c;
+    }
+    .btn-hint { 
+      background: linear-gradient(135deg, #2196f3 0%, #0d47a1 100%);
+      color: #fff;
+      border: 3px solid #1565c0;
+    }
+    .btn-back { 
+      background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%);
+      color: #fff;
+      border: 3px solid #7b1fa2;
+    }
+    .btn-audio { 
+      background: linear-gradient(135deg, #ff9800 0%, #ef6c00 100%);
+      color: #fff;
+      border: 3px solid #f57c00;
+    }
+
+    /* Completion Modal */
+    .completion-modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .completion-modal.show { display: flex; }
+    .completion-content {
+      background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+      padding: 50px;
+      border-radius: 30px;
+      text-align: center;
+      max-width: 600px;
+      width: 90%;
+      animation: slideIn 0.5s ease-out;
+      border: 8px solid #4caf50;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    .completion-content h2 {
+      font-size: 2.8em;
+      margin-bottom: 20px;
+      color: #4caf50;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    .completion-score {
+      font-size: 4.5em;
+      font-weight: bold;
+      margin: 20px 0;
+      background: linear-gradient(135deg, #4caf50, #2196f3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .completion-content p {
+      font-size: 1.5em;
+      line-height: 1.8;
+      margin: 15px 0;
+      color: #333;
+    }
+    .stars {
+      font-size: 3.5em;
+      margin: 20px 0;
+      color: #ffeb3b;
+      text-shadow: 0 0 10px rgba(255, 235, 59, 0.5);
+    }
+    .celebration {
+      font-size: 4em;
+      margin: 20px 0;
+    }
+
+    /* Level Selector */
+    .level-selector {
+      background: white;
+      padding: 40px;
+      border-radius: 25px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      margin-bottom: 30px;
+      border: 5px solid #2196f3;
+      display: none;
+    }
+    .level-selector.active { display: block; }
+    .level-selector h2 {
+      text-align: center;
+      color: #2196f3;
+      margin-bottom: 30px;
+      font-size: 2.2em;
+    }
+    .level-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .level-btn {
+      position: relative;
+      background: linear-gradient(135deg, #42a5f5 0%, #1976d2 100%);
+      color: #fff;
+      border: none;
+      padding: 30px 25px;
+      border-radius: 20px;
+      font-size: 1.3em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+    .level-btn:hover:not(.locked) {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+      background: linear-gradient(135deg, #64b5f6 0%, #2196f3 100%);
+    }
+    .level-btn.completed {
+      background: linear-gradient(135deg, #66bb6a 0%, #388e3c 100%);
+    }
+    .level-btn.locked {
+      background: linear-gradient(135deg, #bdbdbd 0%, #757575 100%);
+      color: #fff;
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+    .level-badge, .lock-icon {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2em;
+    }
+    .level-badge {
+      background: #fff;
+      color: #4caf50;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .lock-icon { 
+      background: #fff;
+      color: #757575;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header h1 { font-size: 2.2em; }
+      .header .bangla-title { font-size: 1.8em; }
+      .score-board { grid-template-columns: repeat(2, 1fr); }
+      .menu-card { padding: 25px 20px; }
+      .game-area { padding: 25px 20px; }
+      .bangla-text { font-size: 2.5em; }
+      .english-text { font-size: 1.8em; }
+      .progress-controls .btn { 
+        padding: 12px 20px; 
+        font-size: 1em;
+        margin: 5px;
+        min-width: 150px;
+      }
+      .btn { 
+        padding: 15px 25px; 
+        font-size: 1.1em;
+        min-width: 160px;
+      }
+      .record-btn {
+        width: 80px;
+        height: 80px;
+      }
+    }
+
+    /* Bangla Font Fallback */
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;700&display=swap');
+    .bangla-font {
+      font-family: 'Noto Sans Bengali', 'Siyam Rupali', Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>Bangla Bhasha - বাংলা ভাষা</h1>
+      <div class="bangla-title">বাংলা শেখা - Learn Bangla</div>
+      <p>Speak Bangla from Day 1! Interactive learning for kids</p>
+      <p>🎤 Voice Recording • 🔊 Pronunciation • 🎮 Fun Games</p>
+    </div>
+
+    <!-- Progress controls - ALWAYS VISIBLE -->
+    <div class="progress-controls">
+      <button class="btn btn-hint" id="exportBtn">💾 Save Progress</button>
+      <button class="btn btn-next" id="importBtn">📂 Load Progress</button>
+      <input type="file" id="progressFile" accept=".json" style="display:none;" />
+    </div>
+
+    <!-- Main Menu -->
+    <div class="main-menu" id="mainMenu">
+      <div class="menu-card speaking" onclick="selectGameType('speaking')">
+        <div class="menu-card-icon">🎤</div>
+        <h2>Speaking Practice</h2>
+        <p>Record your voice and practice pronunciation. Start with basic words and phrases.</p>
+        <div class="level-info">Beginner Friendly</div>
+      </div>
+      
+      <div class="menu-card vocabulary" onclick="selectGameType('vocabulary')">
+        <div class="menu-card-icon">📚</div>
+        <h2>Vocabulary Builder</h2>
+        <p>Learn common Bangla words with pictures and audio. Build your word bank!</p>
+        <div class="level-info">Essential Words</div>
+      </div>
+      
+      <div class="menu-card listening" onclick="selectGameType('listening')">
+        <div class="menu-card-icon">👂</div>
+        <h2>Listening Skills</h2>
+        <p>Listen to Bangla and choose the correct picture or translation.</p>
+        <div class="level-info">Ear Training</div>
+      </div>
+      
+      <div class="menu-card conversation" onclick="selectGameType('conversation')">
+        <div class="menu-card-icon">💬</div>
+        <h2>Conversation Practice</h2>
+        <p>Practice real conversations with animated characters. Learn useful phrases!</p>
+        <div class="level-info">Daily Conversations</div>
+      </div>
+    </div>
+
+    <!-- Level Selector -->
+    <div class="level-selector" id="levelSelector">
+      <h2>Select Difficulty Level</h2>
+      <div class="level-buttons" id="levelButtons"></div>
+    </div>
+
+    <!-- Game Area -->
+    <div class="game-area" id="gameArea">
+      <div class="score-board">
+        <div class="score-item">
+          <div class="score-label">Lesson</div>
+          <div class="score-value" id="lessonNumber">1/10</div>
+        </div>
+        <div class="score-item">
+          <div class="score-label">Correct</div>
+          <div class="score-value" id="correctScore">0</div>
+        </div>
+        <div class="score-item">
+          <div class="score-label">Speaking</div>
+          <div class="score-value" id="speakingScore">0%</div>
+        </div>
+        <div class="score-item">
+          <div class="score-label">Activity</div>
+          <div class="score-value" id="activityType">Speaking</div>
+        </div>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill">0%</div>
+      </div>
+
+      <!-- Speaking Game -->
+      <div id="speakingGame" style="display:none;">
+        <div class="bangla-display">
+          <div class="bangla-text bangla-font" id="banglaWord">আমি</div>
+          <div class="english-text" id="englishTranslation">I / Me</div>
+          <div class="pronunciation" id="pronunciationGuide">aami</div>
+        </div>
+
+        <div class="voice-section">
+          <div class="voice-title">🎤 Practice Saying This Word</div>
+          <p style="font-size:1.2em; color:#666; margin-bottom:20px;">Click record, say the word, then listen to yourself!</p>
+          
+          <div class="recording-controls">
+            <button class="record-btn start" onclick="startRecording()" id="recordBtn">
+              <span>🎤</span>
+            </button>
+            <button class="record-btn stop" onclick="stopRecording()" id="stopBtn" disabled>
+              <span>⏹️</span>
+            </button>
+            <button class="record-btn" onclick="playSample()" id="sampleBtn">
+              <span>🔊</span>
+            </button>
+          </div>
+          
+          <div class="recording-status" id="recordingStatus">Click the microphone to start recording</div>
+          
+          <div class="playback" id="playbackSection" style="display:none;">
+            <p style="font-size:1.2em; margin-bottom:10px;">Your recording:</p>
+            <audio controls id="audioPlayback"></audio>
+            <button class="btn btn-audio" onclick="ratePronunciation()" style="margin-top:15px;">
+              <span>⭐</span> Rate My Pronunciation
+            </button>
+          </div>
+        </div>
+
+        <div class="hint-box" id="hintBox">
+          <strong>💡 Pronunciation Tip:</strong> <span id="hintText"></span>
+        </div>
+      </div>
+
+      <!-- Vocabulary Game -->
+      <div id="vocabularyGame" style="display:none;">
+        <div class="bangla-display">
+          <div class="bangla-text bangla-font" id="vocabBanglaWord">বাংলা</div>
+          <div class="english-text" id="vocabQuestion">What does this word mean?</div>
+        </div>
+
+        <div class="options-container" id="vocabOptions"></div>
+
+        <div class="explanation-box" id="vocabExplanation">
+          <h3>📚 Word Details</h3>
+          <p><strong>Meaning:</strong> <span id="wordMeaning"></span></p>
+          <p><strong>Pronunciation:</strong> <span id="wordPronunciation"></span></p>
+          <p><strong>Example:</strong> <span id="wordExample"></span></p>
+        </div>
+      </div>
+
+      <!-- Listening Game -->
+      <div id="listeningGame" style="display:none;">
+        <div class="voice-section">
+          <div class="voice-title">👂 Listen Carefully</div>
+          <p style="font-size:1.3em; color:#333; margin-bottom:25px;" id="listeningInstruction">
+            Click the speaker to hear the Bangla word, then choose the correct picture.
+          </p>
+          
+          <div style="text-align:center; margin:30px 0;">
+            <button class="record-btn" onclick="playListeningAudio()" id="listenBtn" style="width:120px; height:120px; font-size:2.5em;">
+              🔊
+            </button>
+            <div style="margin-top:15px; font-size:1.2em; color:#666;" id="listenCount">
+              Click to listen (3 tries remaining)
+            </div>
+          </div>
+
+          <div class="options-container" id="listeningOptions"></div>
+        </div>
+      </div>
+
+      <!-- Conversation Game -->
+      <div id="conversationGame" style="display:none;">
+        <div class="conversation-scene">
+          <div class="character">
+            <div class="character-avatar">👨</div>
+            <div class="character-speech bangla bangla-font" id="characterSpeech">
+              আপনার নাম কী?
+            </div>
+          </div>
+          
+          <div class="character-response">
+            <p style="font-size:1.3em; color:#333; margin-bottom:15px;">
+              <strong>How to respond:</strong> Say "আমার নাম [Your Name]"
+            </p>
+            <div style="display:flex; gap:15px; flex-wrap:wrap;">
+              <button class="btn btn-audio" onclick="playResponse('response1')">
+                <span>🔊</span> Hear Response
+              </button>
+              <button class="btn btn-hint" onclick="showConversationHint()">
+                <span>💡</span> Show Hint
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="options-container" id="conversationOptions"></div>
+
+        <div class="explanation-box" id="conversationExplanation">
+          <h3>💬 Conversation Tips</h3>
+          <p id="conversationTips"></p>
+        </div>
+      </div>
+
+      <div class="feedback-area" id="feedbackArea"></div>
+
+      <div class="controls">
+        <button class="btn btn-back" onclick="backToMenu()" id="backBtn">
+          <span>←</span> Back to Menu
+        </button>
+        <button class="btn btn-hint" onclick="showHint()" id="hintBtn">
+          <span>💡</span> Hint
+        </button>
+        <button class="btn btn-next" onclick="nextLesson()" style="display:none;" id="nextBtn">
+          Next Lesson <span>→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div class="completion-modal" id="completionModal">
+      <div class="completion-content">
+        <div class="celebration">🎉</div>
+        <h2 id="completionTitle">Shabash! শাবাশ!</h2>
+        <div class="stars" id="starsDisplay">⭐⭐⭐⭐⭐</div>
+        <div class="completion-score" id="completionScore">100%</div>
+        <p id="completionMessage">Excellent! You're speaking Bangla!</p>
+        <button class="btn btn-next" onclick="closeCompletionModal()" id="completionBtn">
+          Continue
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Game Configuration
+    const LESSONS_PER_LEVEL = 10;
+    const MASTERY_THRESHOLD = 0.7; // 70% to pass
+    const STORAGE_KEY = "banglaLearningProgress_v1";
+
+    // Game Types
+    const GAME_TYPES = {
+      SPEAKING: 'speaking',
+      VOCABULARY: 'vocabulary',
+      LISTENING: 'listening',
+      CONVERSATION: 'conversation'
+    };
+
+    // Bangla Learning Data
+    const speakingData = {
+      1: [
+        {
+          bangla: "আমি",
+          english: "I / Me",
+          pronunciation: "aami",
+          hint: "Say 'aa' like in 'car', then 'mi' like 'me'",
+          sampleAudio: "data:audio/wav;base64,UklGRnoAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoAAAB=" // Placeholder
+        },
+        {
+          bangla: "তুমি",
+          english: "You",
+          pronunciation: "tumi",
+          hint: "'tu' like 'too', 'mi' like 'me'",
+          sampleAudio: "data:audio/wav;base64,UklGRnoAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoAAAB="
+        },
+        {
+          bangla: "ভালো",
+          english: "Good / Well",
+          pronunciation: "bhalo",
+          hint: "'bha' like 'ba' in 'bar', 'lo' like 'low'",
+          sampleAudio: "data:audio/wav;base64,UklGRnoAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoAAAB="
+        },
+        {
+          bangla: "আমি ভালো",
+          english: "I am fine",
+          pronunciation: "aami bhalo",
+          hint: "Say 'aami' then 'bhalo' with a short pause",
+          sampleAudio: "data:audio/wav;base64,UklGRnoAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoAAAB="
+        },
+        {
+          bangla: "ধন্যবাদ",
+          english: "Thank you",
+          pronunciation: "dhonnobad",
+          hint: "'dhon' like 'don', 'no' like 'no', 'bad' like 'bud'",
+          sampleAudio: "data:audio/wav;base64,UklGRnoAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoAAAB="
+        }
+      ],
+      2: [
+        {
+          bangla: "নাম",
+          english: "Name",
+          pronunciation: "naam",
+          hint: "Say 'naam' like 'nom' but longer 'aa'",
+          sampleAudio: "data:audio/wav;base64,UklGRnoAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoAAAB="
+        },
+        {
+          bangla: "আমার নাম",
+          english: "My name",
+          pronunciation: "aamaar naam",
+          hint: "'aamaar' has a longer 'aa' sound",
+          sampleAudio: "data:audio/wav;base64,UklGRnoAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoAAAB="
+        },
+        {
+          bangla: "খানা",
+          english: "Food / Meal",
+          pronunciation: "khaana",
+          hint: "'khaa' with a puff of air, like 'kha' in 'khaki'",
+          sampleAudio: "data:audio/wav;base64,UklGRnoAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoAAAB="
+        },
+        {
+          bangla: "জল",
+          english: "Water",
+          pronunciation: "jol",
+          hint: "'jo' like 'jo' in 'job', 'l' is soft",
+          sampleAudio: "data:audio/wav;base64,UklGRnoAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoAAAB="
+        },
+        {
+          bangla: "বন্ধু",
+          english: "Friend",
+          pronunciation: "bondhu",
+          hint: "'bon' like 'bone', 'dhu' like 'do'",
+          sampleAudio: "data:audio/wav;base64,UklGRnoAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoAAAB="
+        }
+      ]
+    };
+
+    const vocabularyData = {
+      1: [
+        {
+          bangla: "বাবা",
+          english: "Father / Dad",
+          pronunciation: "baaba",
+          meaning: "Father or Dad",
+          example: "আমার বাবা - My father",
+          options: ["Mother", "Father", "Sister", "Brother"],
+          correct: 1,
+          image: "👨"
+        },
+        {
+          bangla: "মা",
+          english: "Mother / Mom",
+          pronunciation: "maa",
+          meaning: "Mother or Mom",
+          example: "আমার মা - My mother",
+          options: ["Father", "Mother", "Grandfather", "Aunt"],
+          correct: 1,
+          image: "👩"
+        },
+        {
+          bangla: "ঘর",
+          english: "House / Home",
+          pronunciation: "ghor",
+          meaning: "House or Home",
+          example: "আমার ঘর - My house",
+          options: ["School", "House", "Park", "Car"],
+          correct: 1,
+          image: "🏠"
+        },
+        {
+          bangla: "গাছ",
+          english: "Tree",
+          pronunciation: "gaach",
+          meaning: "Tree",
+          example: "বড় গাছ - Big tree",
+          options: ["Flower", "Tree", "Grass", "Mountain"],
+          correct: 1,
+          image: "🌳"
+        },
+        {
+          bangla: "ফুল",
+          english: "Flower",
+          pronunciation: "phul",
+          meaning: "Flower",
+          example: "সুন্দর ফুল - Beautiful flower",
+          options: ["Tree", "Flower", "Leaf", "Fruit"],
+          correct: 1,
+          image: "🌸"
+        }
+      ],
+      2: [
+        {
+          bangla: "বই",
+          english: "Book",
+          pronunciation: "boi",
+          meaning: "Book",
+          example: "আমার বই - My book",
+          options: ["Pen", "Book", "Paper", "Bag"],
+          correct: 1,
+          image: "📚"
+        },
+        {
+          bangla: "কলম",
+          english: "Pen",
+          pronunciation: "kolom",
+          meaning: "Pen",
+          example: "নীল কলম - Blue pen",
+          options: ["Pencil", "Pen", "Eraser", "Ruler"],
+          correct: 1,
+          image: "🖊️"
+        },
+        {
+          bangla: "মুখ",
+          english: "Face / Mouth",
+          pronunciation: "mukh",
+          meaning: "Face or Mouth",
+          example: "সুন্দর মুখ - Beautiful face",
+          options: ["Hand", "Face", "Eye", "Nose"],
+          correct: 1,
+          image: "😊"
+        },
+        {
+          bangla: "হাত",
+          english: "Hand",
+          pronunciation: "haat",
+          meaning: "Hand",
+          example: "ডান হাত - Right hand",
+          options: ["Foot", "Hand", "Head", "Leg"],
+          correct: 1,
+          image: "✋"
+        },
+        {
+          bangla: "চোখ",
+          english: "Eye",
+          pronunciation: "chokh",
+          meaning: "Eye",
+          example: "দুটি চোখ - Two eyes",
+          options: ["Ear", "Eye", "Nose", "Mouth"],
+          correct: 1,
+          image: "👀"
+        }
+      ]
+    };
+
+    const listeningData = {
+      1: [
+        {
+          audioText: "বাবা",
+          meaning: "Father",
+          options: ["👨 Father", "👩 Mother", "👦 Brother", "👧 Sister"],
+          correct: 0,
+          hint: "This person is usually called 'Dad' in English"
+        },
+        {
+          audioText: "মা",
+          meaning: "Mother",
+          options: ["👨 Father", "👩 Mother", "🏠 House", "🚗 Car"],
+          correct: 1,
+          hint: "This person is usually called 'Mom' in English"
+        },
+        {
+          audioText: "ঘর",
+          meaning: "House",
+          options: ["🏠 House", "🌳 Tree", "🚗 Car", "📚 Book"],
+          correct: 0,
+          hint: "You live in this place"
+        },
+        {
+          audioText: "গাছ",
+          meaning: "Tree",
+          options: ["🌸 Flower", "🌳 Tree", "🏠 House", "🚗 Car"],
+          correct: 1,
+          hint: "It has leaves and branches"
+        },
+        {
+          audioText: "ফুল",
+          meaning: "Flower",
+          options: ["🌳 Tree", "🌸 Flower", "🏠 House", "👨 Father"],
+          correct: 1,
+          hint: "It's colorful and smells nice"
+        }
+      ]
+    };
+
+    const conversationData = {
+      1: [
+        {
+          character: "👨",
+          bangla: "আপনার নাম কী?",
+          english: "What is your name?",
+          response: "আমার নাম [Your Name]",
+          responseMeaning: "My name is [Your Name]",
+          pronunciation: "aamaar naam [Your Name]",
+          options: [
+            "হ্যাঁ - Yes",
+            "আমার নাম - My name is...",
+            "ধন্যবাদ - Thank you",
+            "কেমন আছেন? - How are you?"
+          ],
+          correct: 1,
+          tips: "When someone asks your name, respond with 'আমার নাম' followed by your name."
+        },
+        {
+          character: "👩",
+          bangla: "কেমন আছেন?",
+          english: "How are you?",
+          response: "আমি ভালো, ধন্যবাদ",
+          responseMeaning: "I am fine, thank you",
+          pronunciation: "aami bhalo, dhonnobad",
+          options: [
+            "হ্যাঁ - Yes",
+            "আমি ভালো - I am fine",
+            "নাম কী? - What is your name?",
+            "বিদায় - Goodbye"
+          ],
+          correct: 1,
+          tips: "A common response to 'How are you?' is 'I am fine, thank you'"
+        },
+        {
+          character: "👴",
+          bangla: "আপনি কোথায় থাকেন?",
+          english: "Where do you live?",
+          response: "আমি আমেরিকায় থাকি",
+          responseMeaning: "I live in America",
+          pronunciation: "aami amerikaay thaaki",
+          options: [
+            "আমি খাই - I eat",
+            "আমি আমেরিকায় থাকি - I live in America",
+            "আমি জানি না - I don't know",
+            "সুন্দর - Beautiful"
+          ],
+          correct: 1,
+          tips: "Use 'আমি...থাকি' to say where you live. Replace 'আমেরিকায়' with your country."
+        }
+      ]
+    };
+
+    // Game State
+    let gameProgress = {
+      speaking: { 1: { completed: false, unlocked: true, score: 0 } },
+      vocabulary: { 1: { completed: false, unlocked: true, score: 0 } },
+      listening: { 1: { completed: false, unlocked: true, score: 0 } },
+      conversation: { 1: { completed: false, unlocked: true, score: 0 } }
+    };
+
+    // Initialize higher levels as locked
+    for (let i = 2; i <= 5; i++) {
+      gameProgress.speaking[i] = { completed: false, unlocked: false, score: 0 };
+      gameProgress.vocabulary[i] = { completed: false, unlocked: false, score: 0 };
+      gameProgress.listening[i] = { completed: false, unlocked: false, score: 0 };
+      gameProgress.conversation[i] = { completed: false, unlocked: false, score: 0 };
+    }
+
+    let currentGameType = null;
+    let currentLevel = 1;
+    let lessonNumber = 1;
+    let correctCount = 0;
+    let totalAttempts = 0;
+    let speakingAttempts = 0;
+    let currentLesson = null;
+    let lessons = [];
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let listenAttempts = 0;
+    const MAX_LISTEN_ATTEMPTS = 3;
+
+    // Save/Load Progress Functions
+    function saveProgress() {
+      const data = {
+        version: 1,
+        progress: gameProgress,
+        lastPlayed: new Date().toISOString()
+      };
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {
+        console.warn("Could not save progress:", e);
+      }
+    }
+
+    function loadProgressFromLocalStorage() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        if (!data || data.version !== 1 || !data.progress) return;
+        
+        // Update progress for each game type
+        Object.keys(gameProgress).forEach(gameType => {
+          Object.keys(gameProgress[gameType]).forEach(level => {
+            if (data.progress[gameType] && data.progress[gameType][level]) {
+              gameProgress[gameType][level].completed = !!data.progress[gameType][level].completed;
+              gameProgress[gameType][level].unlocked = !!data.progress[gameType][level].unlocked;
+              gameProgress[gameType][level].score = data.progress[gameType][level].score || 0;
+            }
+          });
+        });
+      } catch (e) {
+        console.warn("Could not load progress:", e);
+      }
+    }
+
+    function exportProgressToFile() {
+      const data = { 
+        version: 1, 
+        progress: gameProgress,
+        lastPlayed: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "bangla-learning-progress.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      // Show feedback
+      const feedback = document.getElementById("feedbackArea");
+      feedback.innerHTML = '<span class="emoji">✅</span> Progress saved successfully!';
+      feedback.className = "feedback-area show correct";
+      setTimeout(() => feedback.classList.remove("show"), 2000);
+    }
+
+    function importProgressFromFile(file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (!data || data.version !== 1 || !data.progress) {
+            alert("This file does not look like a valid progress file.");
+            return;
+          }
+          
+          // Update progress
+          Object.keys(gameProgress).forEach(gameType => {
+            Object.keys(gameProgress[gameType]).forEach(level => {
+              if (data.progress[gameType] && data.progress[gameType][level]) {
+                gameProgress[gameType][level].completed = !!data.progress[gameType][level].completed;
+                gameProgress[gameType][level].unlocked = !!data.progress[gameType][level].unlocked;
+                gameProgress[gameType][level].score = data.progress[gameType][level].score || 0;
+              }
+            });
+          });
+          
+          saveProgress();
+          
+          const feedback = document.getElementById("feedbackArea");
+          feedback.innerHTML = '<span class="emoji">✅</span> Progress loaded successfully!';
+          feedback.className = "feedback-area show correct";
+          setTimeout(() => feedback.classList.remove("show"), 2000);
+          
+        } catch (err) {
+          console.error(err);
+          alert("Could not read this file. Please check and try again.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Game Flow Functions
+    function selectGameType(gameType) {
+      currentGameType = gameType;
+      document.getElementById("mainMenu").style.display = "none";
+      document.getElementById("levelSelector").classList.add("active");
+      renderLevelButtons();
+    }
+
+    function renderLevelButtons() {
+      const container = document.getElementById("levelButtons");
+      container.innerHTML = "";
+      
+      for (let level = 1; level <= 5; level++) {
+        const btn = document.createElement("button");
+        const progress = gameProgress[currentGameType][level];
+        
+        btn.className = "level-btn";
+        if (!progress.unlocked) btn.classList.add("locked");
+        if (progress.completed) btn.classList.add("completed");
+        
+        btn.innerHTML = `
+          <div style="font-size: 1.8em; margin-bottom: 10px;">${getLevelIcon(level)}</div>
+          <div style="font-size: 1.5em; margin-bottom: 5px;">Level ${level}</div>
+          <div style="font-size: 0.9em; opacity: 0.9;">${getLevelSubtitle()}</div>
+          ${progress.score > 0 ? `<div style="margin-top: 10px; font-size: 0.9em;">Score: ${progress.score}%</div>` : ''}
+        `;
+        
+        if (progress.completed) {
+          const badge = document.createElement("div");
+          badge.className = "level-badge";
+          badge.textContent = "★";
+          btn.appendChild(badge);
+        }
+        
+        if (!progress.unlocked) {
+          const lock = document.createElement("div");
+          lock.className = "lock-icon";
+          lock.textContent = "🔒";
+          btn.appendChild(lock);
+        }
+        
+        if (progress.unlocked) {
+          btn.onclick = () => startLevel(level);
+        }
+        
+        container.appendChild(btn);
+      }
+    }
+
+    function getLevelIcon(level) {
+      const icons = ["🌱", "🌿", "🌳", "🏆", "👑"];
+      return icons[level - 1] || "🌟";
+    }
+
+    function getLevelSubtitle() {
+      const subtitles = {
+        speaking: ["Basic Words", "Simple Phrases", "Short Sentences", "Conversations", "Fluency"],
+        vocabulary: ["Family & Home", "School & Objects", "Food & Drinks", "Nature & Animals", "Advanced"],
+        listening: ["Single Words", "Short Phrases", "Questions", "Stories", "Conversations"],
+        conversation: ["Greetings", "Introductions", "Daily Life", "Shopping", "Advanced Topics"]
+      };
+      return subtitles[currentGameType] ? subtitles[currentGameType][currentLevel - 1] : "Level " + currentLevel;
+    }
+
+    function startLevel(level) {
+      currentLevel = level;
+      lessonNumber = 1;
+      correctCount = 0;
+      totalAttempts = 0;
+      speakingAttempts = 0;
+      listenAttempts = 0;
+      
+      // Load lessons based on game type and level
+      switch(currentGameType) {
+        case GAME_TYPES.SPEAKING:
+          lessons = speakingData[Math.min(level, 2)] || speakingData[2];
+          break;
+        case GAME_TYPES.VOCABULARY:
+          lessons = vocabularyData[Math.min(level, 2)] || vocabularyData[2];
+          break;
+        case GAME_TYPES.LISTENING:
+          lessons = listeningData[Math.min(level, 1)] || listeningData[1];
+          break;
+        case GAME_TYPES.CONVERSATION:
+          lessons = conversationData[Math.min(level, 1)] || conversationData[1];
+          break;
+      }
+      
+      // Hide level selector, show game area
+      document.getElementById("levelSelector").classList.remove("active");
+      document.getElementById("gameArea").classList.add("active");
+      
+      // Hide all game types first
+      document.getElementById("speakingGame").style.display = "none";
+      document.getElementById("vocabularyGame").style.display = "none";
+      document.getElementById("listeningGame").style.display = "none";
+      document.getElementById("conversationGame").style.display = "none";
+      
+      // Show current game type
+      document.getElementById(currentGameType + "Game").style.display = "block";
+      document.getElementById("activityType").textContent = 
+        currentGameType.charAt(0).toUpperCase() + currentGameType.slice(1);
+      
+      loadLesson();
+    }
+
+    function loadLesson() {
+      if (lessonNumber > LESSONS_PER_LEVEL || lessonNumber > lessons.length) {
+        showCompletion();
+        return;
+      }
+      
+      currentLesson = lessons[lessonNumber - 1];
+      
+      // Reset UI
+      document.getElementById("feedbackArea").classList.remove("show");
+      document.getElementById("hintBox").classList.remove("show");
+      document.getElementById("nextBtn").style.display = "none";
+      
+      // Reset recording UI
+      if (currentGameType === GAME_TYPES.SPEAKING) {
+        document.getElementById("recordingStatus").textContent = "Click the microphone to start recording";
+        document.getElementById("recordingStatus").className = "recording-status";
+        document.getElementById("playbackSection").style.display = "none";
+        document.getElementById("recordBtn").disabled = false;
+        document.getElementById("stopBtn").disabled = true;
+        document.getElementById("sampleBtn").disabled = false;
+      }
+      
+      // Reset listening UI
+      if (currentGameType === GAME_TYPES.LISTENING) {
+        listenAttempts = 0;
+        updateListenCount();
+      }
+      
+      // Enable hint button
+      const hintBtn = document.getElementById("hintBtn");
+      hintBtn.classList.remove("disabled");
+      hintBtn.disabled = false;
+      
+      // Load lesson based on game type
+      switch(currentGameType) {
+        case GAME_TYPES.SPEAKING:
+          loadSpeakingLesson();
+          break;
+        case GAME_TYPES.VOCABULARY:
+          loadVocabularyLesson();
+          break;
+        case GAME_TYPES.LISTENING:
+          loadListeningLesson();
+          break;
+        case GAME_TYPES.CONVERSATION:
+          loadConversationLesson();
+          break;
+      }
+      
+      updateScoreboard();
+    }
+
+    function loadSpeakingLesson() {
+      document.getElementById("banglaWord").textContent = currentLesson.bangla;
+      document.getElementById("englishTranslation").textContent = currentLesson.english;
+      document.getElementById("pronunciationGuide").textContent = currentLesson.pronunciation;
+      document.getElementById("hintText").textContent = currentLesson.hint;
+    }
+
+    function loadVocabularyLesson() {
+      document.getElementById("vocabBanglaWord").textContent = currentLesson.bangla;
+      document.getElementById("vocabQuestion").textContent = `What does "${currentLesson.bangla}" mean?`;
+      
+      // Update explanation box
+      document.getElementById("wordMeaning").textContent = currentLesson.meaning;
+      document.getElementById("wordPronunciation").textContent = currentLesson.pronunciation;
+      document.getElementById("wordExample").textContent = currentLesson.example;
+      document.getElementById("vocabExplanation").style.display = "none";
+      
+      const optionsContainer = document.getElementById("vocabOptions");
+      optionsContainer.innerHTML = "";
+      
+      const letters = ['A', 'B', 'C', 'D'];
+      currentLesson.options.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerHTML = `
+          <div class="option-letter">${letters[index]}</div>
+          <div>${option}</div>
+        `;
+        btn.onclick = () => checkAnswer(index);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function loadListeningLesson() {
+      document.getElementById("listeningInstruction").textContent = 
+        `Listen to the Bangla word, then choose: "${currentLesson.meaning}"`;
+      updateListenCount();
+      
+      const optionsContainer = document.getElementById("listeningOptions");
+      optionsContainer.innerHTML = "";
+      
+      const letters = ['A', 'B', 'C', 'D'];
+      currentLesson.options.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerHTML = `
+          <div class="option-letter">${letters[index]}</div>
+          <div style="font-size: 1.3em;">${option}</div>
+        `;
+        btn.onclick = () => checkAnswer(index);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function loadConversationLesson() {
+      document.getElementById("characterSpeech").textContent = currentLesson.bangla;
+      
+      // Update explanation
+      document.getElementById("conversationTips").textContent = currentLesson.tips;
+      document.getElementById("conversationExplanation").style.display = "none";
+      
+      const optionsContainer = document.getElementById("conversationOptions");
+      optionsContainer.innerHTML = "";
+      
+      const letters = ['A', 'B', 'C', 'D'];
+      currentLesson.options.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerHTML = `
+          <div class="option-letter">${letters[index]}</div>
+          <div style="font-size: 1.3em;">${option}</div>
+        `;
+        btn.onclick = () => checkAnswer(index);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    // Voice Recording Functions
+    async function startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        
+        mediaRecorder.ondataavailable = (event) => {
+          audioChunks.push(event.data);
+        };
+        
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+          const audioUrl = URL.createObjectURL(audioBlob);
+          const audio = document.getElementById('audioPlayback');
+          audio.src = audioUrl;
+          document.getElementById('playbackSection').style.display = 'block';
+          document.getElementById('recordingStatus').textContent = "Recording complete! Listen to your voice.";
+          document.getElementById('recordingStatus').className = "recording-status recorded";
+          
+          // Stop all tracks
+          stream.getTracks().forEach(track => track.stop());
+        };
+        
+        mediaRecorder.start();
+        document.getElementById('recordBtn').disabled = true;
+        document.getElementById('stopBtn').disabled = false;
+        document.getElementById('recordingStatus').textContent = "Recording... Speak now!";
+        document.getElementById('recordingStatus').className = "recording-status recording";
+        
+      } catch (error) {
+        alert("Could not access microphone. Please check permissions.");
+        console.error("Microphone error:", error);
+      }
+    }
+
+    function stopRecording() {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+        document.getElementById('recordBtn').disabled = false;
+        document.getElementById('stopBtn').disabled = true;
+        speakingAttempts++;
+      }
+    }
+
+    function playSample() {
+      // In a real app, this would play actual Bangla audio
+      // For now, we'll show a message
+      const feedback = document.getElementById("feedbackArea");
+      feedback.innerHTML = '<span class="emoji">🔊</span> Listen carefully and try to copy the pronunciation!';
+      feedback.className = "feedback-area show correct";
+      setTimeout(() => feedback.classList.remove("show"), 3000);
+    }
+
+    function ratePronunciation() {
+      // Simulate pronunciation rating
+      const ratings = ["Excellent! 🎉", "Very good! 👍", "Good job! 👏", "Keep practicing! 💪"];
+      const randomRating = ratings[Math.floor(Math.random() * ratings.length)];
+      
+      const feedback = document.getElementById("feedbackArea");
+      feedback.innerHTML = `<span class="emoji">⭐</span> Pronunciation: ${randomRating}`;
+      feedback.className = "feedback-area show correct";
+      
+      // Count as correct attempt for speaking practice
+      correctCount++;
+      totalAttempts++;
+      document.getElementById("nextBtn").style.display = "inline-block";
+      updateScoreboard();
+    }
+
+    // Listening Functions
+    function playListeningAudio() {
+      if (listenAttempts < MAX_LISTEN_ATTEMPTS) {
+        listenAttempts++;
+        updateListenCount();
+        
+        // Simulate playing audio
+        const feedback = document.getElementById("feedbackArea");
+        feedback.innerHTML = `<span class="emoji">🔊</span> Listening: "${currentLesson.audioText}" - ${currentLesson.meaning}`;
+        feedback.className = "feedback-area show correct";
+        setTimeout(() => feedback.classList.remove("show"), 2000);
+      }
+    }
+
+    function updateListenCount() {
+      const remaining = MAX_LISTEN_ATTEMPTS - listenAttempts;
+      document.getElementById("listenCount").textContent = 
+        `Click to listen (${remaining} ${remaining === 1 ? 'try' : 'tries'} remaining)`;
+      document.getElementById("listenBtn").disabled = listenAttempts >= MAX_LISTEN_ATTEMPTS;
+    }
+
+    // Conversation Functions
+    function playResponse(responseId) {
+      const feedback = document.getElementById("feedbackArea");
+      feedback.innerHTML = `<span class="emoji">🔊</span> Say: "${currentLesson.response}" (${currentLesson.responseMeaning})`;
+      feedback.className = "feedback-area show correct";
+      setTimeout(() => feedback.classList.remove("show"), 3000);
+    }
+
+    function showConversationHint() {
+      document.getElementById("conversationExplanation").style.display = "block";
+    }
+
+    // Game Logic Functions
+    function checkAnswer(selectedIndex) {
+      totalAttempts++;
+      const isCorrect = selectedIndex === currentLesson.correct;
+      
+      if (isCorrect) {
+        correctCount++;
+        showFeedback("Shabash! Correct! 🎉", true);
+        
+        // Show explanation for vocabulary and conversation
+        if (currentGameType === GAME_TYPES.VOCABULARY || currentGameType === GAME_TYPES.CONVERSATION) {
+          document.getElementById(currentGameType + "Explanation").style.display = "block";
+        }
+      } else {
+        showFeedback(`Not quite. The correct answer was: ${getCorrectAnswerText()}`, false);
+        
+        // Still show explanation for learning
+        if (currentGameType === GAME_TYPES.VOCABULARY || currentGameType === GAME_TYPES.CONVERSATION) {
+          document.getElementById(currentGameType + "Explanation").style.display = "block";
+        }
+      }
+      
+      // Disable all options
+      const selector = ".option-btn";
+      document.querySelectorAll(selector).forEach((btn, index) => {
+        btn.disabled = true;
+        if (index === currentLesson.correct) {
+          btn.classList.add("correct");
+        } else if (index === selectedIndex && !isCorrect) {
+          btn.classList.add("incorrect");
+        }
+      });
+      
+      // Show next button
+      document.getElementById("nextBtn").style.display = "inline-block";
+      
+      updateScoreboard();
+    }
+
+    function getCorrectAnswerText() {
+      if (currentGameType === GAME_TYPES.VOCABULARY) {
+        return currentLesson.options[currentLesson.correct];
+      } else if (currentGameType === GAME_TYPES.LISTENING) {
+        return currentLesson.options[currentLesson.correct];
+      } else if (currentGameType === GAME_TYPES.CONVERSATION) {
+        return currentLesson.options[currentLesson.correct];
+      }
+      return "";
+    }
+
+    function showFeedback(message, isCorrect) {
+      const feedback = document.getElementById("feedbackArea");
+      feedback.innerHTML = `<span class="emoji">${isCorrect ? '✅' : '❌'}</span> ${message}`;
+      feedback.className = "feedback-area show " + (isCorrect ? "correct" : "incorrect");
+    }
+
+    function showHint() {
+      const hintBox = document.getElementById("hintBox");
+      if (currentGameType === GAME_TYPES.SPEAKING) {
+        hintBox.style.display = "block";
+      } else if (currentLesson.hint) {
+        const feedback = document.getElementById("feedbackArea");
+        feedback.innerHTML = `<span class="emoji">💡</span> Hint: ${currentLesson.hint}`;
+        feedback.className = "feedback-area show correct";
+        setTimeout(() => feedback.classList.remove("show"), 3000);
+      }
+    }
+
+    function nextLesson() {
+      lessonNumber++;
+      loadLesson();
+    }
+
+    function updateScoreboard() {
+      document.getElementById("lessonNumber").textContent = 
+        `${lessonNumber}/${Math.min(LESSONS_PER_LEVEL, lessons.length)}`;
+      document.getElementById("correctScore").textContent = correctCount;
+      
+      const speakingPercentage = speakingAttempts > 0 ? Math.min(100, Math.round((correctCount / speakingAttempts) * 100)) : 0;
+      document.getElementById("speakingScore").textContent = `${speakingPercentage}%`;
+      
+      const progress = ((lessonNumber - 1) / Math.min(LESSONS_PER_LEVEL, lessons.length)) * 100;
+      const fill = document.getElementById("progressFill");
+      fill.style.width = `${progress}%`;
+      fill.textContent = `${Math.round(progress)}%`;
+    }
+
+    function showCompletion() {
+      const accuracy = totalAttempts === 0 ? 0 : correctCount / totalAttempts;
+      const percentage = Math.round(accuracy * 100);
+      const passed = accuracy >= MASTERY_THRESHOLD;
+      
+      // Update progress
+      if (passed) {
+        gameProgress[currentGameType][currentLevel].completed = true;
+        gameProgress[currentGameType][currentLevel].score = percentage;
+        
+        // Unlock next level if exists
+        if (currentLevel < 5) {
+          gameProgress[currentGameType][currentLevel + 1].unlocked = true;
+        }
+      }
+      
+      saveProgress();
+      
+      // Update modal
+      document.getElementById("completionTitle").textContent = 
+        passed ? "Shabash! Excellent! 🎉" : "Keep Practicing!";
+      
+      document.getElementById("completionScore").textContent = `${percentage}%`;
+      
+      const starsCount = Math.min(5, Math.ceil(percentage / 20));
+      document.getElementById("starsDisplay").textContent = "⭐".repeat(starsCount);
+      
+      document.getElementById("completionMessage").innerHTML = passed ? 
+        `Excellent work! You completed Level ${currentLevel}!<br>You've unlocked the next level!` :
+        `You got ${correctCount} out of ${totalAttempts} correct.<br>Try again to reach ${MASTERY_THRESHOLD * 100}% accuracy!`;
+      
+      document.getElementById("completionBtn").textContent = 
+        passed ? "Continue" : "Try Again";
+      
+      document.getElementById("completionModal").classList.add("show");
+    }
+
+    function closeCompletionModal() {
+      document.getElementById("completionModal").classList.remove("show");
+      document.getElementById("gameArea").classList.remove("active");
+      document.getElementById("levelSelector").classList.add("active");
+      renderLevelButtons();
+    }
+
+    function backToMenu() {
+      if (confirm("Leave this lesson? Your progress for this session will be lost.")) {
+        // Reset game state
+        currentGameType = null;
+        currentLevel = 1;
+        lessonNumber = 1;
+        correctCount = 0;
+        totalAttempts = 0;
+        speakingAttempts = 0;
+        currentLesson = null;
+        lessons = [];
+        
+        // Clean up UI
+        document.getElementById("gameArea").classList.remove("active");
+        document.getElementById("levelSelector").classList.remove("active");
+        document.getElementById("mainMenu").style.display = "grid";
+        
+        // Hide all game content
+        document.getElementById("speakingGame").style.display = "none";
+        document.getElementById("vocabularyGame").style.display = "none";
+        document.getElementById("listeningGame").style.display = "none";
+        document.getElementById("conversationGame").style.display = "none";
+        
+        // Reset UI elements
+        document.getElementById("feedbackArea").classList.remove("show");
+        document.getElementById("hintBox").classList.remove("show");
+        document.getElementById("nextBtn").style.display = "none";
+        
+        updateScoreboard();
+      }
+    }
+
+    // Hook up import/export buttons
+    document.getElementById("exportBtn").onclick = exportProgressToFile;
+    document.getElementById("importBtn").onclick = () => {
+      document.getElementById("progressFile").click();
+    };
+    document.getElementById("progressFile").addEventListener("change", e => {
+      const file = e.target.files[0];
+      if (file) importProgressFromFile(file);
+      // Reset file input
+      e.target.value = '';
+    });
+
+    // Initialize
+    loadProgressFromLocalStorage();
+    
+    // Add Bangla font if available
+    const style = document.createElement('style');
+    style.textContent = `
+      @font-face {
+        font-family: 'BanglaFont';
+        src: local('Siyam Rupali'), local('Kalpurush'), local('SolaimanLipi'),
+             url('https://fonts.maateen.me/siyam-rupali/font.css');
+      }
+      .bangla-font {
+        font-family: 'BanglaFont', 'Noto Sans Bengali', 'Arial', sans-serif;
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
