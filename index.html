@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
-  <title>🗣️ Safia's Spoken Bangla · দাদু-দিদার সাথে কথা</title>
+  <title>🗣️ Safia's Spoken Bangla · Read & Speak</title>
   <style>
     * {
       box-sizing: border-box;
@@ -13,7 +13,7 @@
     }
 
     body {
-      font-family: 'Segoe UI', 'Nirmala UI', 'Vrinda', 'Shonar Bangla', sans-serif;
+      font-family: 'Segoe UI', 'Nirmala UI', 'Vrinda', 'Shonar Bangla', 'Arial', sans-serif;
       background: linear-gradient(145deg, #006a4e 0%, #006a4e 100%);
       min-height: 100vh;
       padding: 12px;
@@ -306,7 +306,7 @@
     }
     
     .phrase-pronunciation {
-      font-size: 2rem;
+      font-size: 2.5rem;
       color: #ffffff;
       background: #f42a41;
       padding: 15px 25px;
@@ -314,13 +314,26 @@
       display: inline-block;
       border: 3px solid #ffcd00;
       letter-spacing: 1px;
+      font-family: 'Arial', sans-serif;
+      margin-bottom: 15px;
     }
     
     .phrase-english {
-      font-size: 1.8rem;
+      font-size: 2rem;
       color: #ffcd00;
       margin-top: 15px;
       font-style: italic;
+    }
+    
+    .phrase-context {
+      font-size: 1.4rem;
+      color: #ffffff;
+      background: #006a4e;
+      padding: 10px 20px;
+      border-radius: 40px;
+      display: inline-block;
+      margin-top: 10px;
+      border: 2px solid #ffcd00;
     }
 
     /* Big sound button for little fingers */
@@ -354,7 +367,7 @@
       letter-spacing: 2px;
     }
 
-    /* Picture options */
+    /* Picture options with transliteration */
     .picture-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -366,7 +379,7 @@
       background: #f42a41;
       border: 4px solid #ffcd00;
       border-radius: 50px;
-      padding: 25px 15px;
+      padding: 20px 15px;
       text-align: center;
       cursor: pointer;
       transition: 0.1s;
@@ -379,7 +392,7 @@
     }
     
     .picture-option.speaking-mode {
-      min-height: 180px;
+      min-height: 200px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -387,23 +400,35 @@
     }
     
     .picture-emoji {
-      font-size: 5rem;
-      margin-bottom: 15px;
-    }
-    
-    .picture-bn {
-      font-size: 2.2rem;
-      color: #ffcd00;
-      font-weight: 900;
+      font-size: 4rem;
       margin-bottom: 8px;
     }
     
-    .picture-sound-icon {
+    .picture-bn {
       font-size: 2rem;
+      color: #ffcd00;
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+    
+    .picture-transliteration {
+      font-size: 1.4rem;
+      color: #ffffff;
+      background: #006a4e;
+      padding: 5px 12px;
+      border-radius: 30px;
+      display: inline-block;
+      margin: 5px 0;
+      border: 2px solid #ffcd00;
+      font-family: 'Arial', sans-serif;
+    }
+    
+    .picture-sound-icon {
+      font-size: 1.8rem;
       color: white;
       background: #006a4e;
-      width: 50px;
-      height: 50px;
+      width: 45px;
+      height: 45px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -552,11 +577,23 @@
     .mistake-item {
       background: #f42a41;
       border-radius: 40px;
-      padding: 15px;
+      padding: 20px;
       margin: 10px 0;
       border: 3px solid #ffcd00;
       text-align: left;
-      font-size: 1.3rem;
+      font-size: 1.4rem;
+    }
+    
+    .mistake-bn {
+      font-size: 2rem;
+      color: #ffcd00;
+      font-weight: 900;
+    }
+    
+    .mistake-en {
+      font-size: 1.4rem;
+      color: #ffffff;
+      margin-top: 5px;
     }
 
     @media (max-width: 600px) {
@@ -569,7 +606,7 @@
       }
       
       .phrase-pronunciation {
-        font-size: 1.6rem;
+        font-size: 2rem;
       }
       
       .btn {
@@ -579,6 +616,14 @@
       
       .sound-icon {
         font-size: 4rem;
+      }
+      
+      .picture-bn {
+        font-size: 1.8rem;
+      }
+      
+      .picture-transliteration {
+        font-size: 1.2rem;
       }
     }
 
@@ -604,10 +649,10 @@
   <div class="screen active" id="homeScreen">
     <div class="path-header">
       <h1>দাদু-দিদার সাথে কথা</h1>
-      <p>Talk with Grandparents ✨</p>
+      <p>Read & Speak with Grandparents ✨</p>
     </div>
     
-    <div class="speaking-badge">🔊 Tap any picture · Listen & Speak!</div>
+    <div class="speaking-badge">🔊 Read the English · Hear the Bangla!</div>
 
     <!-- Conversation Topics -->
     <div class="menu-grid">
@@ -615,42 +660,42 @@
         <div class="mc-icon">🕌</div>
         <div class="mc-name">শুভেচ্ছা</div>
         <div class="mc-name-bn">Greetings</div>
-        <div class="mc-desc">আসসালামুয়ালাইকুম, আল্লাহ হাফিজ</div>
+        <div class="mc-desc">Assalamu Alaikum, Allah Hafiz</div>
       </div>
       
       <div class="menu-card" onclick="openCategory('family')">
         <div class="mc-icon">👨‍👩‍👧</div>
         <div class="mc-name">পরিবার</div>
         <div class="mc-name-bn">Family</div>
-        <div class="mc-desc">আব্বু, আম্মু, দাদু, দিদা</div>
+        <div class="mc-desc">Abbu, Ammu, Dādu, Didā</div>
       </div>
       
       <div class="menu-card" onclick="openCategory('questions')">
         <div class="mc-icon">❓</div>
         <div class="mc-name">প্রশ্ন</div>
         <div class="mc-name-bn">Questions</div>
-        <div class="mc-desc">কেমন আছেন? কী খবর?</div>
+        <div class="mc-desc">Kemon achhen? Ki khobor?</div>
       </div>
       
       <div class="menu-card" onclick="openCategory('food')">
         <div class="mc-icon">🍛</div>
         <div class="mc-name">খাবার</div>
         <div class="mc-name-bn">Food</div>
-        <div class="mc-desc">ভাত, মাছ, মিষ্টি</div>
+        <div class="mc-desc">Bhat, Ilish, Mishti</div>
       </div>
       
       <div class="menu-card" onclick="openCategory('emotions')">
         <div class="mc-icon">😊</div>
         <div class="mc-name">অনুভূতি</div>
         <div class="mc-name-bn">Feelings</div>
-        <div class="mc-desc">ভালো, খুশি, ক্লান্ত</div>
+        <div class="mc-desc">Bhalo, Khushi, Klanto</div>
       </div>
       
       <div class="menu-card" onclick="openCategory('daily')">
         <div class="mc-icon">🌅</div>
         <div class="mc-name">দৈনন্দিন</div>
         <div class="mc-name-bn">Daily Life</div>
-        <div class="mc-desc">ঘুম, খেলা, পড়া</div>
+        <div class="mc-desc">Ghum, Khela, Pora</div>
       </div>
     </div>
 
@@ -684,8 +729,8 @@
 
     <div id="learningArea">
       <div class="lesson-card">
-        <div class="lesson-badge">🔊 Listen & Learn</div>
-        <div class="listening-animation" id="listeningAnimation">🎤 Listening...</div>
+        <div class="lesson-badge">🔊 Read & Listen</div>
+        <div class="listening-animation" id="listeningAnimation">🎤 Speaking...</div>
         <div id="phraseContent"></div>
       </div>
     </div>
@@ -694,8 +739,8 @@
 
     <div class="btn-row">
       <button class="btn btn-back" onclick="leaveLesson()">🏠 Home</button>
-      <button class="btn btn-sound" id="soundBtn" onclick="speakPhrase()">🔊 Say it</button>
-      <button class="btn btn-check" id="checkBtn" onclick="checkAnswer()">✅ Got it!</button>
+      <button class="btn btn-sound" id="soundBtn" onclick="speakPhrase()">🔊 Hear it</button>
+      <button class="btn btn-check" id="checkBtn" onclick="checkAnswer()">✅ I know it!</button>
       <button class="btn btn-next" id="nextBtn" onclick="nextQuestion()">▶ Next</button>
     </div>
   </div>
@@ -774,7 +819,7 @@
       pronunciation: 'Assalamu Alaikum', 
       en: 'Peace be upon you', 
       picture: '🕌',
-      context: 'Say this when you meet dādu-didā'
+      context: 'Say this when you meet Dādu-Didā'
     },
     { 
       bn: 'ওয়ালাইকুম আসসালাম', 
@@ -795,7 +840,7 @@
       pronunciation: 'Kemon achhen?', 
       en: 'How are you? (polite)', 
       picture: '😊',
-      context: 'Ask dādu-didā how they are'
+      context: 'Ask Dādu-Didā how they are'
     },
     { 
       bn: 'ভালো আছি, আল্লাহর রহমতে', 
@@ -803,6 +848,27 @@
       en: "I'm fine, by God's grace", 
       picture: '🙏',
       context: 'Reply when someone asks how you are'
+    },
+    { 
+      bn: 'আপনাকে দেখে খুব ভালো লাগলো', 
+      pronunciation: 'Apnake dekhe khub bhalo laglo', 
+      en: 'So good to see you', 
+      picture: '🥰',
+      context: 'Say when you meet them'
+    },
+    { 
+      bn: 'আপনার খবর কি?', 
+      pronunciation: 'Apanar khobor ki?', 
+      en: "What's your news?", 
+      picture: '📰',
+      context: 'Ask what\'s new with them'
+    },
+    { 
+      bn: 'দোয়া করবেন', 
+      pronunciation: 'Doa korben', 
+      en: 'Please pray for me', 
+      picture: '🤲',
+      context: 'Ask for their blessings'
     }
   ];
 
@@ -821,6 +887,20 @@
       en: 'Grandmother', 
       picture: '👵',
       context: 'Call your grandmother'
+    },
+    { 
+      bn: 'নানা', 
+      pronunciation: 'Nana', 
+      en: 'Maternal grandfather', 
+      picture: '👴',
+      context: 'Call your mother\'s father'
+    },
+    { 
+      bn: 'নানু', 
+      pronunciation: 'Nanu', 
+      en: 'Maternal grandmother', 
+      picture: '👵',
+      context: 'Call your mother\'s mother'
     },
     { 
       bn: 'আব্বু', 
@@ -859,7 +939,7 @@
       pronunciation: 'Apni kemon achhen?', 
       en: 'How are you?', 
       picture: '😊',
-      context: 'Ask dādu-didā how they are'
+      context: 'Ask Dādu-Didā how they are'
     },
     { 
       bn: 'খেয়েছেন?', 
@@ -888,6 +968,27 @@
       en: 'Where are you going?', 
       picture: '🚶',
       context: 'Ask when they\'re going out'
+    },
+    { 
+      bn: 'কখন আসবেন?', 
+      pronunciation: 'Kokhon ashben?', 
+      en: 'When will you come?', 
+      picture: '📅',
+      context: 'Ask when they\'re visiting'
+    },
+    { 
+      bn: 'আপনার কী পছন্দ?', 
+      pronunciation: 'Apanar ki pochondo?', 
+      en: 'What do you like?', 
+      picture: '❤️',
+      context: 'Ask about their favorites'
+    },
+    { 
+      bn: 'বাইরে গরম লাগছে?', 
+      pronunciation: 'Baire gorom lagche?', 
+      en: 'Is it hot outside?', 
+      picture: '🌞',
+      context: 'Ask about the weather'
     }
   ];
 
@@ -927,6 +1028,27 @@
       en: 'I\'m hungry', 
       picture: '🍽️',
       context: 'Tell them you\'re hungry'
+    },
+    { 
+      bn: 'পেট ভরে গেছে', 
+      pronunciation: 'Pet bhore geche', 
+      en: 'I\'m full', 
+      picture: '😋',
+      context: 'Say after eating'
+    },
+    { 
+      bn: 'রান্না খুব মজা হয়েছে', 
+      pronunciation: 'Ranna khub moja hoyeche', 
+      en: 'The cooking is delicious', 
+      picture: '👩‍🍳',
+      context: 'Compliment their cooking'
+    },
+    { 
+      bn: 'আমার জন্য কী এনেছেন?', 
+      pronunciation: 'Amar jonno ki enechen?', 
+      en: 'What did you bring for me?', 
+      picture: '🎁',
+      context: 'Ask when they visit'
     }
   ];
 
@@ -966,6 +1088,27 @@
       en: 'I love you very much', 
       picture: '❤️',
       context: 'Say I love you!'
+    },
+    { 
+      bn: 'আমার একটু ভয় লাগছে', 
+      pronunciation: 'Amar ektu bhoy lagche', 
+      en: 'I\'m a little scared', 
+      picture: '😨',
+      context: 'Tell them when you\'re scared'
+    },
+    { 
+      bn: 'আমি খুব একা লাগছে', 
+      pronunciation: 'Ami khub eka lagche', 
+      en: 'I\'m feeling lonely', 
+      picture: '😔',
+      context: 'Tell them you miss them'
+    },
+    { 
+      bn: 'আপনার কাছে আসতে চাই', 
+      pronunciation: 'Apanar kache ash te chai', 
+      en: 'I want to come to you', 
+      picture: '🏃',
+      context: 'Say you want to visit'
     }
   ];
 
@@ -1005,6 +1148,27 @@
       en: 'Feeling cold', 
       picture: '❄️',
       context: 'Say when it\'s cold'
+    },
+    { 
+      bn: 'আজ স্কুল বন্ধ', 
+      pronunciation: 'Aj skul bondho', 
+      en: 'School is closed today', 
+      picture: '🏠',
+      context: 'Tell them about holiday'
+    },
+    { 
+      bn: 'বন্ধুদের সাথে খেলছি', 
+      pronunciation: 'Bondhuder sathe khelchi', 
+      en: 'Playing with friends', 
+      picture: '🎮',
+      context: 'Tell them what you\'re doing'
+    },
+    { 
+      bn: 'গল্প শোনান', 
+      pronunciation: 'Golpo shonan', 
+      en: 'Tell me a story', 
+      picture: '📖',
+      context: 'Ask for a story'
     }
   ];
 
@@ -1021,7 +1185,7 @@
   // Progress tracking
   let progress = {};
   try {
-    const saved = localStorage.getItem('safia_spoken_bangla');
+    const saved = localStorage.getItem('safia_spoken_bangla_v2');
     if (saved) progress = JSON.parse(saved);
   } catch (e) {}
   
@@ -1080,7 +1244,7 @@
         <div style="width:${pct}%; height:25px; border-radius:30px; background:linear-gradient(90deg,#ffcd00,#ffffff);"></div>
       </div>
       <div style="font-size:1.4rem;">⭐ ${totalStars} stars · ${completedLessons}/${totalLessons} lessons done!</div>
-      <div style="font-size:1.2rem; margin-top:10px;">🔊 Tap any phrase to hear it spoken!</div>
+      <div style="font-size:1.2rem; margin-top:10px;">🔊 Read the English · Hear the Bangla!</div>
     `;
   }
 
@@ -1137,7 +1301,7 @@
     // Get 5 phrases for this lesson
     phrases = [];
     for (let i = 0; i < 5; i++) {
-      let idx = i % allPhrases.length;
+      let idx = (i + (lessonNum * 2)) % allPhrases.length;
       phrases.push(allPhrases[idx]);
     }
     
@@ -1169,19 +1333,27 @@
     document.getElementById('listeningAnimation').classList.remove('show');
     
     // Create 4 options (1 correct, 3 wrong)
-    let options = [phrase.bn];
+    let options = [phrase];
     let otherPhrases = CATEGORIES[currentCategory].data.filter(p => p.bn !== phrase.bn);
     
     while (options.length < 4 && otherPhrases.length > 0) {
       let randomIdx = Math.floor(Math.random() * otherPhrases.length);
-      let randomPhrase = otherPhrases[randomIdx].bn;
-      if (!options.includes(randomPhrase)) {
+      let randomPhrase = otherPhrases[randomIdx];
+      if (!options.find(p => p.bn === randomPhrase.bn)) {
         options.push(randomPhrase);
       }
     }
     
+    // Fill with defaults if needed
+    const defaults = [
+      { bn: 'ভালো আছি', pronunciation: 'Bhalo achi', en: 'I am fine', picture: '😊' },
+      { bn: 'খেয়েছেন?', pronunciation: 'Kheyechen?', en: 'Have you eaten?', picture: '🍚' },
+      { bn: 'কোথায় যাচ্ছেন?', pronunciation: 'Kothay jachchen?', en: 'Where are you going?', picture: '🚶' },
+      { bn: 'কেমন আছেন?', pronunciation: 'Kemon achhen?', en: 'How are you?', picture: '😊' }
+    ];
+    
     while (options.length < 4) {
-      options.push(['ভালো আছি', 'খেয়েছেন', 'কোথায় যাচ্ছেন'][options.length - 2] || 'কেমন আছেন');
+      options.push(defaults[options.length - 1]);
     }
     
     options = shuffleArray(options);
@@ -1192,27 +1364,29 @@
         <div class="phrase-bangla">${phrase.bn}</div>
         <div class="phrase-pronunciation">${phrase.pronunciation}</div>
         <div class="phrase-english">✨ ${phrase.en}</div>
+        <div class="phrase-context">💬 ${phrase.context}</div>
       </div>
       
       <div class="sound-button" onclick="speakBangla('${phrase.bn.replace(/'/g, "\\'")}')">
         <span class="sound-icon">🔊</span>
-        <span class="sound-text">Tap to Hear</span>
+        <span class="sound-text">Tap to Hear Bangla</span>
       </div>
       
-      <div class="speaking-badge" style="margin:15px 0;">👆 Now find the meaning:</div>
+      <div class="speaking-badge" style="margin:15px 0;">👆 Read the English · Find the Bangla:</div>
       
       <div class="picture-grid">
     `;
     
     options.forEach(opt => {
-      let matchingPhrase = CATEGORIES[currentCategory].data.find(p => p.bn === opt) || { picture: '🔤', bn: opt };
-      let safeOpt = opt.replace(/'/g, "\\'");
+      let safeBn = opt.bn.replace(/'/g, "\\'");
       
       html += `
-        <div class="picture-option speaking-mode" onclick="selectPhrase('${safeOpt}', '${phrase.bn.replace(/'/g, "\\'")}')">
-          <div class="picture-emoji">${matchingPhrase.picture || '🔤'}</div>
-          <div class="picture-bn">${opt}</div>
-          <div class="picture-sound-icon" onclick="event.stopPropagation(); speakBangla('${safeOpt}')">🔊</div>
+        <div class="picture-option speaking-mode" onclick="selectPhrase('${safeBn}', '${phrase.bn.replace(/'/g, "\\'")}')">
+          <div class="picture-emoji">${opt.picture || '🔤'}</div>
+          <div class="picture-bn">${opt.bn}</div>
+          <div class="picture-transliteration">${opt.pronunciation}</div>
+          <div class="picture-sound-icon" onclick="event.stopPropagation(); speakBangla('${safeBn}')">🔊</div>
+          <div style="font-size:1.2rem; color:#fff; margin-top:5px;">${opt.en}</div>
         </div>
       `;
     });
@@ -1239,11 +1413,11 @@
     let options = document.querySelectorAll('.picture-option');
     options.forEach(opt => {
       opt.style.pointerEvents = 'none';
-      let optText = opt.querySelector('.picture-bn')?.textContent.trim() || '';
+      let optBn = opt.querySelector('.picture-bn')?.textContent.trim() || '';
       
-      if (optText === correct) {
+      if (optBn === correct) {
         opt.classList.add('correct');
-      } else if (optText === selected && !isCorrect) {
+      } else if (optBn === selected && !isCorrect) {
         opt.classList.add('wrong');
       }
     });
@@ -1261,13 +1435,14 @@
     } else {
       wrong++;
       mistakes.push({
-        phrase: phrase.bn,
-        meaning: phrase.en,
-        correct: phrase.bn
+        bn: phrase.bn,
+        pronunciation: phrase.pronunciation,
+        en: phrase.en,
+        context: phrase.context
       });
       
       document.getElementById('feedback').className = 'feedback show bad';
-      document.getElementById('feedback').textContent = `💙 The answer is: ${phrase.bn}`;
+      document.getElementById('feedback').innerHTML = `💙 The answer is:<br><strong>${phrase.bn}</strong> (${phrase.pronunciation})<br><em>${phrase.en}</em>`;
       
       // Show correct answer
       setTimeout(() => {
@@ -1296,7 +1471,7 @@
   window.checkAnswer = function() {
     if (!answered) {
       document.getElementById('feedback').className = 'feedback show bad';
-      document.getElementById('feedback').textContent = '👆 Tap on the picture that matches!';
+      document.getElementById('feedback').textContent = '👆 Tap on the Bangla phrase that matches!';
     }
   };
 
@@ -1324,7 +1499,7 @@
     }
     
     try {
-      localStorage.setItem('safia_spoken_bangla', JSON.stringify(progress));
+      localStorage.setItem('safia_spoken_bangla_v2', JSON.stringify(progress));
     } catch (e) {}
     
     updateStarDisplay();
@@ -1339,11 +1514,13 @@
     
     let mistakesHtml = '';
     if (mistakes.length > 0) {
-      mistakesHtml = '<div style="font-size:1.4rem; margin:15px 0;">📝 Practice these:</div>';
+      mistakesHtml = '<div style="font-size:1.6rem; margin:15px 0;">📝 Practice these phrases:</div>';
       mistakes.forEach(m => {
         mistakesHtml += `
           <div class="mistake-item">
-            🔊 ${m.phrase} · ${m.meaning}
+            <div class="mistake-bn">${m.bn}</div>
+            <div class="mistake-en"><strong>${m.pronunciation}</strong> · ${m.en}</div>
+            <div class="mistake-en" style="color:#ffcd00;">💬 ${m.context}</div>
           </div>
         `;
       });
