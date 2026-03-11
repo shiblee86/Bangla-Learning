@@ -374,30 +374,6 @@
       border-color: #ffb3b3;
     }
 
-    .tracing-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin: 20px 0;
-    }
-    
-    .tracing-cell {
-      background: #2b4f6e;
-      border: 3px solid #ffb347;
-      border-radius: 30px;
-      padding: 25px 10px;
-      text-align: center;
-      font-size: 3.5rem;
-      color: #ffe066;
-      cursor: pointer;
-      box-shadow: 0 6px 0 #0a1a2a;
-    }
-    
-    .tracing-cell:active {
-      transform: translateY(6px);
-      box-shadow: 0 2px 0 #0a1a2a;
-    }
-
     .feedback {
       border-radius: 60px;
       padding: 20px 25px;
@@ -535,6 +511,14 @@
     .screen.active {
       display: block;
     }
+
+    /* Loading indicator */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      font-size: 2rem;
+      color: #ffe066;
+    }
   </style>
 </head>
 <body>
@@ -656,7 +640,9 @@
       <div class="prog-bar"><div class="prog-fill" id="progressFill" style="width:0%"></div></div>
     </div>
 
-    <div id="learningArea"></div>
+    <div id="learningArea">
+      <div class="loading">🌟 Loading your lesson...</div>
+    </div>
     <div class="feedback" id="feedback"></div>
 
     <div class="btn-row">
@@ -702,7 +688,7 @@
     { bn: 'ঔ', en: 'ou', sound: 'ou', picture: '🥥', word: 'ঔষধ', meaning: 'medicine' }
   ];
 
-  // Consonants (first 12 for demo)
+  // Consonants
   const BANJONBARNA = [
     { bn: 'ক', en: 'ko', sound: 'k', picture: '🪁', word: 'কমল', meaning: 'lotus' },
     { bn: 'খ', en: 'kho', sound: 'kh', picture: '🍚', word: 'খই', meaning: 'puffed rice' },
@@ -771,22 +757,25 @@
     { bn: 'সাদা', en: 'white', picture: '⚪', sound: 'shada' }
   ];
 
-  // Greetings
+  // Greetings (FIXED: each item has all required fields)
   const GREETINGS = [
-    { bn: 'নমস্কার', en: 'hello/namaste', picture: '🙏', sound: 'nomoskar' },
-    { bn: 'ধন্যবাদ', en: 'thank you', picture: '🙏', sound: 'dhonnobad' },
-    { bn: 'বিদায়', en: 'goodbye', picture: '👋', sound: 'biday' }
+    { bn: 'নমস্কার', en: 'hello', sound: 'nomoskar', picture: '🙏' },
+    { bn: 'ধন্যবাদ', en: 'thank you', sound: 'dhonnobad', picture: '🙏' },
+    { bn: 'বিদায়', en: 'goodbye', sound: 'biday', picture: '👋' },
+    { bn: 'শুভ সকাল', en: 'good morning', sound: 'shubho shokal', picture: '🌅' },
+    { bn: 'শুভ রাত্রি', en: 'good night', sound: 'shubho ratri', picture: '🌙' }
   ];
 
-  // Questions
+  // Questions (FIXED: each item has all required fields)
   const QUESTIONS = [
-    { bn: 'কি', en: 'what', picture: '❓', sound: 'ki' },
-    { bn: 'কোথায়', en: 'where', picture: '📍', sound: 'kothay' },
-    { bn: 'কখন', en: 'when', picture: '⏰', sound: 'kokhon' },
-    { bn: 'কেন', en: 'why', picture: '🤔', sound: 'keno' }
+    { bn: 'কি', en: 'what', sound: 'ki', picture: '❓' },
+    { bn: 'কোথায়', en: 'where', sound: 'kothay', picture: '📍' },
+    { bn: 'কখন', en: 'when', sound: 'kokhon', picture: '⏰' },
+    { bn: 'কেন', en: 'why', sound: 'keno', picture: '🤔' },
+    { bn: 'কে', en: 'who', sound: 'ke', picture: '👤' }
   ];
 
-  // Category definitions
+  // Category definitions with safe data access
   const CATEGORIES = {
     swarabarna: { name: 'স্বরবর্ণ · Vowels', icon: '🟢', data: SWARABARNA, type: 'letter' },
     banjonbarna: { name: 'ব্যঞ্জনবর্ণ · Consonants', icon: '🔵', data: BANJONBARNA, type: 'letter' },
@@ -795,12 +784,18 @@
     fruits: { name: 'ফল · Fruits', icon: '🍎', data: FRUITS, type: 'word' },
     family: { name: 'পরিবার · Family', icon: '👨‍👩‍👧', data: FAMILY, type: 'word' },
     colors: { name: 'রং · Colors', icon: '🎨', data: COLORS, type: 'word' },
-    greetings: { name: 'শুভেচ্ছা · Greetings', icon: '👋', data: GREETINGS, type: 'phrase' },
-    questions: { name: 'প্রশ্ন · Questions', icon: '❓', data: QUESTIONS, type: 'phrase' }
+    greetings: { name: 'শুভেচ্ছা · Greetings', icon: '👋', data: GREETINGS, type: 'word' },
+    questions: { name: 'প্রশ্ন · Questions', icon: '❓', data: QUESTIONS, type: 'word' }
   };
 
   // Progress tracking
-  let progress = JSON.parse(localStorage.getItem('safia_bangla_progress')) || {};
+  let progress = {};
+  try {
+    const saved = localStorage.getItem('safia_bangla_progress');
+    if (saved) progress = JSON.parse(saved);
+  } catch (e) {
+    console.log('No saved progress');
+  }
   
   // Initialize progress for each category
   for (let cat in CATEGORIES) {
@@ -823,11 +818,13 @@
 
   // Helper functions
   function shuffleArray(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
+    if (!arr || arr.length === 0) return [];
+    const newArr = [...arr];
+    for (let i = newArr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
+      [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
     }
-    return arr;
+    return newArr;
   }
 
   function getRandomInt(min, max) {
@@ -837,25 +834,24 @@
   // Update star display
   function updateStarDisplay() {
     let totalStars = 0;
-    for (let cat in CATEGORIES) {
-      for (let i = 1; i <= 5; i++) {
-        if (progress[cat]?.[i]?.stars) {
-          totalStars += progress[cat][i].stars;
-        }
-      }
-    }
-    document.getElementById('starDisplay').textContent = `⭐ ${totalStars} stars`;
-    
-    // Update progress chart
-    let totalLessons = 0;
     let completedLessons = 0;
+    let totalLessons = 0;
+    
     for (let cat in CATEGORIES) {
       for (let i = 1; i <= 5; i++) {
         totalLessons++;
-        if (progress[cat]?.[i]?.done) completedLessons++;
+        if (progress[cat]?.[i]?.stars) {
+          totalStars += progress[cat][i].stars;
+        }
+        if (progress[cat]?.[i]?.done) {
+          completedLessons++;
+        }
       }
     }
-    let pct = Math.round((completedLessons / totalLessons) * 100);
+    
+    document.getElementById('starDisplay').textContent = `⭐ ${totalStars} stars`;
+    
+    let pct = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
     
     document.getElementById('progressDisplay').innerHTML = `
       <h3 style="color:#ffe066; font-size:1.8rem;">📊 My Bangla Journey</h3>
@@ -879,6 +875,11 @@
 
   // Open category (show lessons)
   window.openCategory = function(cat) {
+    if (!CATEGORIES[cat]) {
+      console.error('Category not found:', cat);
+      return;
+    }
+    
     currentCategory = cat;
     document.getElementById('levelsTitle').textContent = CATEGORIES[cat].name + ' — pick a lesson';
     
@@ -886,7 +887,7 @@
     grid.innerHTML = '';
     
     for (let i = 1; i <= 5; i++) {
-      let p = progress[cat][i];
+      let p = progress[cat] && progress[cat][i] ? progress[cat][i] : { done: false, stars: 0 };
       let btn = document.createElement('button');
       btn.className = 'lv-btn' + (p.done ? ' done' : '');
       btn.innerHTML = `
@@ -905,6 +906,11 @@
 
   // Start a lesson
   function startLesson(cat, lessonNum) {
+    if (!CATEGORIES[cat]) {
+      console.error('Category not found:', cat);
+      return;
+    }
+    
     currentLesson = lessonNum;
     currentQuestionIndex = 0;
     correctAnswers = 0;
@@ -913,43 +919,49 @@
     answered = false;
     
     let categoryData = CATEGORIES[cat];
-    let allItems = categoryData.data;
+    let allItems = categoryData.data || [];
     
-    // Generate questions based on lesson number
-    questions = [];
-    let itemsForLesson = [];
-    
-    // Distribute items across lessons
-    let startIdx = (lessonNum - 1) * 3;
-    for (let i = 0; i < 5; i++) {
-      let idx = (startIdx + i) % allItems.length;
-      itemsForLesson.push(allItems[idx]);
+    if (allItems.length === 0) {
+      console.error('No items in category:', cat);
+      return;
     }
     
-    // Create questions
-    itemsForLesson.forEach(item => {
+    // Generate questions
+    questions = [];
+    
+    // Get 5 items for this lesson
+    for (let i = 0; i < 5; i++) {
+      let itemIndex = i % allItems.length;
+      let item = allItems[itemIndex];
+      
+      // Make a safe copy of the item
+      let safeItem = {
+        bn: item.bn || '',
+        en: item.en || '',
+        sound: item.sound || '',
+        picture: item.picture || '🔤',
+        meaning: item.meaning || ''
+      };
+      
+      // Create question based on type
       if (categoryData.type === 'letter' || categoryData.type === 'number') {
-        // For letters/numbers: show the Bangla, ask for English or picture match
         questions.push({
-          type: 'identify',
-          item: item,
-          question: `What is this Bangla letter?`,
-          display: item.bn,
-          correct: item.en,
-          options: generateOptions(item, allItems, 'en')
+          type: 'letter',
+          item: safeItem,
+          display: safeItem.bn,
+          correct: safeItem.en,
+          options: generateSafeOptions(safeItem, allItems, 'en')
         });
       } else {
-        // For words: show picture, ask for Bangla word
         questions.push({
           type: 'word',
-          item: item,
-          question: `What is this in Bangla?`,
-          display: item.picture,
-          correct: item.bn,
-          options: generateOptions(item, allItems, 'bn')
+          item: safeItem,
+          display: safeItem.picture,
+          correct: safeItem.bn,
+          options: generateSafeOptions(safeItem, allItems, 'bn')
         });
       }
-    });
+    }
     
     // Shuffle questions
     questions = shuffleArray(questions);
@@ -959,25 +971,51 @@
     renderQuestion();
   }
 
-  function generateOptions(correctItem, allItems, field) {
+  // Safe option generation
+  function generateSafeOptions(correctItem, allItems, field) {
     let options = [correctItem[field]];
-    while (options.length < 4) {
-      let randomItem = allItems[Math.floor(Math.random() * allItems.length)];
+    let attempts = 0;
+    
+    while (options.length < 4 && attempts < 50) {
+      attempts++;
+      let randomIndex = Math.floor(Math.random() * allItems.length);
+      let randomItem = allItems[randomIndex];
       let val = randomItem[field];
-      if (!options.includes(val)) {
+      
+      if (val && !options.includes(val) && val !== correctItem[field]) {
         options.push(val);
       }
     }
+    
+    // If we still don't have 4 options, add some defaults
+    while (options.length < 4) {
+      if (field === 'bn') {
+        options.push(['আম', 'কলা', 'মা', 'বাবা'][options.length - 1] || 'আম');
+      } else {
+        options.push(['apple', 'banana', 'mother', 'father'][options.length - 1] || 'apple');
+      }
+    }
+    
     return shuffleArray(options);
   }
 
   function renderQuestion() {
+    if (!questions || questions.length === 0) {
+      console.error('No questions available');
+      return;
+    }
+    
     if (currentQuestionIndex >= questions.length) {
       showResult();
       return;
     }
     
     let q = questions[currentQuestionIndex];
+    if (!q) {
+      console.error('Question not found at index:', currentQuestionIndex);
+      return;
+    }
+    
     answered = false;
     
     document.getElementById('questionCounter').textContent = `${currentQuestionIndex + 1}/${questions.length}`;
@@ -990,33 +1028,64 @@
     document.getElementById('hintBtn').disabled = false;
 
     let optionsHtml = '<div class="picture-grid">';
-    q.options.forEach(opt => {
-      let displayOpt = opt;
-      // For word questions, maybe show picture or Bangla
-      if (q.type === 'word') {
-        // Find item with this Bangla word
-        let item = CATEGORIES[currentCategory].data.find(i => i.bn === opt);
-        if (item) {
-          displayOpt = item.picture + ' ' + item.bn;
+    
+    if (q.options && q.options.length > 0) {
+      q.options.forEach(opt => {
+        let displayOpt = opt;
+        let displayEmoji = '🔤';
+        let displayText = opt;
+        
+        // Try to find matching emoji for word options
+        if (q.type === 'word') {
+          let matchingItem = CATEGORIES[currentCategory]?.data?.find(item => item.bn === opt);
+          if (matchingItem && matchingItem.picture) {
+            displayEmoji = matchingItem.picture;
+            displayText = opt;
+          } else {
+            displayEmoji = '📝';
+          }
         } else {
-          displayOpt = opt;
+          displayEmoji = '🔤';
         }
-      }
+        
+        // Escape the option for safe use in onclick
+        let safeOpt = opt.replace(/'/g, "\\'");
+        
+        optionsHtml += `
+          <div class="picture-option" onclick="selectOption('${safeOpt}')">
+            <div class="picture-emoji">${displayEmoji}</div>
+            <div class="picture-bn">${displayText}</div>
+          </div>
+        `;
+      });
+    } else {
+      // Fallback options if something went wrong
       optionsHtml += `
-        <div class="picture-option" onclick="selectOption('${opt.replace(/'/g, "\\'")}')">
-          <div class="picture-emoji">${displayOpt.includes(' ') ? displayOpt.split(' ')[0] : '🔤'}</div>
-          <div class="picture-bn">${displayOpt}</div>
+        <div class="picture-option" onclick="selectOption('${q.correct}')">
+          <div class="picture-emoji">${q.item.picture || '🔤'}</div>
+          <div class="picture-bn">${q.correct}</div>
+        </div>
+        <div class="picture-option" onclick="selectOption('try again')">
+          <div class="picture-emoji">🤔</div>
+          <div class="picture-bn">Try Again</div>
         </div>
       `;
-    });
+    }
+    
     optionsHtml += '</div>';
+
+    let displayContent = q.display || (q.item ? q.item.bn : '🔤');
+    let hintText = '';
+    if (q.item && q.item.sound) {
+      hintText = `<div class="english-hint">${q.item.sound} · ${q.item.en || ''}</div>`;
+    }
 
     document.getElementById('learningArea').innerHTML = `
       <div class="lesson-card">
         <div class="lesson-badge">${q.type === 'word' ? '🖼️ Find the Word' : '🔤 Find the Letter'}</div>
         <div class="bangla-display">
-          <div class="bangla-large">${q.display}</div>
-          ${q.type === 'word' ? '' : '<div class="english-hint">' + q.item.en + ' · ' + q.item.sound + '</div>'}
+          <div class="bangla-large">${displayContent}</div>
+          ${hintText}
         </div>
         ${optionsHtml}
       </div>
@@ -1029,17 +1098,20 @@
     
     answered = true;
     let q = questions[currentQuestionIndex];
+    if (!q) return;
+    
     let isCorrect = (selected === q.correct);
     
     // Highlight correct/wrong answers
     let options = document.querySelectorAll('.picture-option');
     options.forEach(opt => {
       opt.style.pointerEvents = 'none';
-      let optText = opt.querySelector('.picture-bn').textContent.trim();
-      if (optText.includes(q.correct) || optText === q.correct) {
+      let optText = opt.querySelector('.picture-bn')?.textContent.trim() || '';
+      
+      if (optText === q.correct) {
         opt.classList.add('correct');
-      } else if (optText.includes(selected) || optText === selected) {
-        if (!isCorrect) opt.classList.add('wrong');
+      } else if (optText === selected && !isCorrect) {
+        opt.classList.add('wrong');
       }
     });
     
@@ -1047,10 +1119,25 @@
       correctAnswers++;
       document.getElementById('feedback').className = 'feedback show ok';
       document.getElementById('feedback').textContent = '✅ খুব ভালো! Excellent, Safia! ⭐';
+      
+      // Play a little celebration (just visual)
+      setTimeout(() => {
+        let stars = document.createElement('div');
+        stars.style.position = 'fixed';
+        stars.style.top = '50%';
+        stars.style.left = '50%';
+        stars.style.transform = 'translate(-50%, -50%)';
+        stars.style.fontSize = '5rem';
+        stars.style.zIndex = '1000';
+        stars.textContent = '⭐⭐⭐';
+        document.body.appendChild(stars);
+        setTimeout(() => stars.remove(), 1000);
+      }, 200);
+      
     } else {
       wrongAnswers++;
       mistakes.push({
-        question: q.display,
+        question: q.display || 'Question',
         yourAnswer: selected,
         correct: q.correct
       });
@@ -1073,11 +1160,13 @@
 
   window.showHint = function() {
     let q = questions[currentQuestionIndex];
+    if (!q || !q.item) return;
+    
     let hint = '';
     if (q.type === 'word') {
-      hint = `Listen: ${q.item.sound} · In English: ${q.item.en}`;
+      hint = `Listen: ${q.item.sound || ''} · In English: ${q.item.en || ''}`;
     } else {
-      hint = `Say it: ${q.item.sound} · This letter sounds like '${q.item.en}'`;
+      hint = `Say it: ${q.item.sound || ''} · This letter sounds like '${q.item.en || ''}'`;
     }
     document.getElementById('feedback').className = 'feedback show';
     document.getElementById('feedback').textContent = '💡 ' + hint;
@@ -1090,18 +1179,25 @@
 
   function showResult() {
     let total = questions.length;
-    let stars = Math.min(3, Math.ceil(correctAnswers / 2));
+    let stars = Math.min(3, Math.max(1, Math.ceil(correctAnswers / 2)));
     let passed = correctAnswers >= 3;
     
-    if (passed) {
-      progress[currentCategory][currentLesson].done = true;
-      progress[currentCategory][currentLesson].stars = Math.max(
-        progress[currentCategory][currentLesson].stars || 0,
-        stars
-      );
+    if (passed && currentCategory && currentLesson) {
+      if (progress[currentCategory] && progress[currentCategory][currentLesson]) {
+        progress[currentCategory][currentLesson].done = true;
+        progress[currentCategory][currentLesson].stars = Math.max(
+          progress[currentCategory][currentLesson].stars || 0,
+          stars
+        );
+      }
     }
     
-    localStorage.setItem('safia_bangla_progress', JSON.stringify(progress));
+    try {
+      localStorage.setItem('safia_bangla_progress', JSON.stringify(progress));
+    } catch (e) {
+      console.log('Could not save progress');
+    }
+    
     updateStarDisplay();
     
     document.getElementById('resultEmoji').textContent = stars >= 3 ? '🏆' : stars >= 2 ? '🌟' : '⭐';
@@ -1127,14 +1223,18 @@
     document.getElementById('mistakesList').innerHTML = mistakesHtml;
     
     document.getElementById('retryBtn').onclick = function() {
-      startLesson(currentCategory, currentLesson);
+      if (currentCategory) {
+        startLesson(currentCategory, currentLesson);
+      }
     };
     
     let nextBtn = document.getElementById('nextLessonBtn');
-    if (passed && currentLesson < 5) {
+    if (passed && currentLesson < 5 && currentCategory) {
       nextBtn.style.display = 'inline-flex';
       nextBtn.onclick = function() {
-        startLesson(currentCategory, currentLesson + 1);
+        if (currentCategory) {
+          startLesson(currentCategory, currentLesson + 1);
+        }
       };
     } else {
       nextBtn.style.display = 'none';
@@ -1150,7 +1250,7 @@
   };
 
   // Initialize
-  updateStarDisplay();
+  showHome();
 })();
 </script>
 </body>
